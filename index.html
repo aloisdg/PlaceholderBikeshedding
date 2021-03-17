@@ -1,0 +1,81 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Placeholder Bikeshedding</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 115 115%22><text y=%22.9em%22 font-size=%2290%22>🚴</text></svg>"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+    />
+
+    <link rel="stylesheet" href="prism.css" />
+    <style>
+      .flex {
+        display: flex;
+      }
+    </style>
+    <script src="prism.js"></script>
+  </head>
+  <body>
+    <h1>Placeholder Bikeshedding Demo</h1>
+    <div class="flex">
+      <input type="text" id="symbol" value="🚴" />
+      <button type="button" id="apply">transform</button>
+    </div>
+    <pre><code id="demo" class="prism-live language-js"></code></pre>
+    <footer>Made with Prism.js and Water.css</footer>
+
+    <script>
+      function transformTemplate(x) {
+        return `// Basic Usage
+x |> f(${x})     //-->   f(x)
+x |> f(y)(${x})  //-->   f(y)(x)
+x |> f        //-->   Syntax Error
+
+// 2+ Arity Usage
+x |> f(${x},10)   //-->  f(x,10)
+
+// Async Solution (Note this would not require special casing)
+x |> await f(${x})          //-->  await f(x)
+x |> await f(${x}) |> g(${x})  //-->  g(await f(x))
+
+// Other Expressions
+f(x) |> ${x}.data           //-->  f(x).data
+f(x) |> ${x}[${x}.length-1]    //-->  let temp=f(x), temp[temp.length-1]
+f(x) |> { result: ${x} }    //-->  { result: f(x) }
+
+// Complex example
+anArray => anArray
+ |> pickEveryN(${x}, 2)
+ |> ${x}.filter(...)
+ |> makeQuery(${x})
+ |> await readDB(${x}, config)
+ |> extractRemoteUrl(${x})
+ |> await fetch(${x})
+ |> parse(${x})
+ |> console.log(${x});
+
+ // Optional Chaining
+ x |> ${x}?.property
+`;
+      }
+
+      const transform = () => {
+        const code = transformTemplate(symbol.value);
+        demo.innerHTML = Prism.highlight(
+          code,
+          Prism.languages.javascript,
+          "javascript"
+        );
+      };
+      apply.onclick = transform;
+      transform();
+    </script>
+  </body>
+</html>
