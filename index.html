@@ -28,7 +28,12 @@
       <input type="text" id="symbol" value="🚴" />
       <button type="button" id="apply">use</button>
     </div>
-    <pre><code id="demo" class="prism-live language-js"></code></pre>
+    <pre><code id="demo" class="prism language-js"></code></pre>
+    <h2>export</h2>
+    <pre><code id="md" class="prism language-markup">
+    </code></pre>
+    <button type="button" id="copyButton">copy md</button>
+
     <footer>Made with Prism.js and Water.css</footer>
 
     <script>
@@ -66,6 +71,31 @@ anArray => anArray
 `;
       }
 
+      function getTerseness(x) {
+        if (x.length < 2) return "Very terse.";
+        else if (x.length === 2) return "Terse.";
+        else return "Verbose.";
+      }
+
+      function getDemo(x) {
+        return `[demo](${
+          new URL(location.pathname, location.href).href
+        }?token=${x})`;
+      }
+
+      function transformMarkdown(x) {
+        return `| Token |  Typing |  Terseness  |        Readability       |        Multiples       | Notes | TC39 members |
+|-------|:-------:|:------------------:|:---:|:----------------------------------------:|:-----:|:------------:|
+| ${x}  | Easy.   | ${getTerseness(x)} |     | ${x}, ${x + x}, ${
+          x + x + x
+        }; ${x}0, ${x}1, …  | ${getDemo(x)} |              |`;
+      }
+
+      function copy() {
+        navigator.clipboard
+          .writeText(md.innerText);
+      }
+
       const transform = () => {
         const code = transformTemplate(symbol.value);
         demo.innerHTML = Prism.highlight(
@@ -73,8 +103,15 @@ anArray => anArray
           Prism.languages.javascript,
           "javascript"
         );
+        const markdown = transformMarkdown(symbol.value);
+        md.innerHTML = Prism.highlight(
+          markdown,
+          Prism.languages.markup,
+          "markup"
+        );
       };
       apply.onclick = transform;
+      copyButton.onclick = copy;
 
       function loadQueryString() {
         const token = "🚴";
