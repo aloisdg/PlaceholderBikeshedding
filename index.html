@@ -26,7 +26,7 @@
     <h1>Placeholder Bikeshedding Demo</h1>
     <div class="flex">
       <input type="text" id="symbol" value="🚴" />
-      <button type="button" id="apply">transform</button>
+      <button type="button" id="apply">use</button>
     </div>
     <pre><code id="demo" class="prism-live language-js"></code></pre>
     <footer>Made with Prism.js and Water.css</footer>
@@ -75,6 +75,26 @@ anArray => anArray
         );
       };
       apply.onclick = transform;
+
+      function loadQueryString() {
+        const token = "🚴";
+
+        const search = window.location.search;
+        if (!search) return token;
+
+        const parameters = [...new URLSearchParams(search).entries()];
+        if (parameters.length == 0) return token;
+
+        const validParameters = parameters.filter(
+          ([key, value]) => !!key && !!value
+        );
+        if (validParameters.length == 0) return token;
+
+        const results = Object.fromEntries(validParameters);
+        return results.token;
+      }
+
+      symbol.value = loadQueryString();
       transform();
     </script>
   </body>
